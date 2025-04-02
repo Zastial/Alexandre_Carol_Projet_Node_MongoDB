@@ -109,7 +109,7 @@ router.post('/register', [
  *     responses:
  *       201:
  *         description: Utilisateur connecté avec succès
- *       400:
+ *       401:
  *        description: Erreur de validation
  *       500:
  *        description: Erreur système
