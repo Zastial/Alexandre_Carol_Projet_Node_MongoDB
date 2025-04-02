@@ -26,7 +26,7 @@ Avant d'exécuter ce projet, assurez-vous d'avoir installé les éléments suiva
 3. Créez un fichier `.env` à la racine du projet avec les variables suivantes :
    ```env
    PORT=3000
-   MONGO_URI=mongodb://localhost:27017/potions
+   MONGO_URI=mongodb://localhost:27017/esgi
    ```
 
 ## Lancement de MongoDB
