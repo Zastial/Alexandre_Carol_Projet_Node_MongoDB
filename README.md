@@ -16,8 +16,8 @@ Avant d'exécuter ce projet, assurez-vous d'avoir installé les éléments suiva
 
 1. Clonez le dépôt :
    ```sh
-   git clone https://github.com/Zastial/Projet_Node_MongoDB.git
-   cd Projet_Node_MongoDB
+   git clone https://github.com/Zastial/Alexandre_Carol_Projet_Node_MongoDB.git
+   cd Alexandre_Carol_Projet_Node_MongoDB
    ```
 2. Installez les dépendances :
    ```sh
