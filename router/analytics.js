@@ -94,7 +94,7 @@ router.get('/average_score_by_vendor', async (req, res) => {
 router.get('/average_score_by_category', async (req, res) => {
     try {
         const result = await Potion.aggregate([
-            { $group: { _id: "$category", averageScore: { $avg: "$score" } } }
+            { $group: { _id: "$categories", averageScore: { $avg: "$score" } } }
         ]);
         res.json(result);
     } catch (err) {
@@ -125,7 +125,7 @@ router.get('/average_score_by_category', async (req, res) => {
 router.get('/strength_flavor_ratio', async (req, res) => {
     try {
         const result = await Potion.aggregate([
-            { $project: { strengthFlavorRatio: { $divide: ["$strength", "$flavor"] } } }
+            { $project: { strengthFlavorRatio: { $divide: ["$ratings.strength", "$ratings.flavor"] } } }
         ]);
         res.json(result);
     } catch (err) {
@@ -147,21 +147,25 @@ router.get('/strength_flavor_ratio', async (req, res) => {
  *         description: Nom de la potion
  *         schema:
  *          type: string
- *         example: "Potion de force"
  *       - name: vendor_id
  *         in: query
  *         required: false
  *         description: ID du vendeur
  *         schema:
  *           type: string
- *           example: "12345"
  *       - name: category
  *         in: query
  *         required: false
  *         description: Catégorie de la potion
  *         schema:
  *           type: string
- *           example: "Soin"
+ *     responses:
+ *       200:
+ *         description: Liste des potions correspondant aux critères de recherche
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/Potion'
  */
 router.get('/search', async (req, res) => {
     const { name, vendor_id, category } = req.query;
