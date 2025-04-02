@@ -1,5 +1,8 @@
 # Projet MongoDB - API Potions
 
+NOM : ALEXANDRE CAROL \
+CLASSE: IW 4e année
+
 Une API pour gérer des potions magiques avec Node.js et MongoDB.
 
 ## Prérequis
