@@ -133,50 +133,61 @@ router.get('/strength_flavor_ratio', async (req, res) => {
     }
 });
 
-// GET /analytics/search fonction de recherche avec 3 paramètres :
+// GET /analytics/search fonction de recherche avec 3 paramètres : 
+// grouper par vendeur ou catégorie, metrique au choix (avg, sum, count), champ au choix (score, price, ratings).
 /**
  * @swagger
  * /analytics/search:
  *   get:
- *     summary: Recherche de potions par nom, ID de vendeur ou catégorie
+ *     summary: Récupère les statistiques de recherche
  *     tags: [Analytics]
  *     parameters:
- *       - name: name
- *         in: query
- *         required: false
- *         description: Nom de la potion
- *         schema:
- *          type: string
- *       - name: vendor_id
- *         in: query
- *         required: false
- *         description: ID du vendeur
+ *       - in: query
+ *         name: groupBy
+ *         required: true
+ *         description: Champ pour grouper les résultats
  *         schema:
  *           type: string
- *       - name: category
- *         in: query
- *         required: false
- *         description: Catégorie de la potion
+ *           enum: [vendor_id, categories]
+ *       - in: query
+ *         name: metric
+ *         required: true
+ *         description: Métrique à calculer
  *         schema:
  *           type: string
+ *           enum: [avg, sum, count]
+ *       - in: query
+ *         name: field
+ *         required: true
+ *         description: Champ à analyser
+ *         schema:
+ *           type: string
+ *           enum: [score, price, ratings]
  *     responses:
  *       200:
- *         description: Liste des potions correspondant aux critères de recherche
- *         content:
- *           application/json:
- *             schema:
- *              $ref: '#/components/schemas/Potion'
+ *         description: Résultats de la recherche
+ *       400:
+ *         description: Erreur de validation des paramètres
+ *       500:
+ *        description: Erreur serveur
  */
 router.get('/search', async (req, res) => {
-    const { name, vendor_id, category } = req.query;
-    const query = {};
-    if (name) query.name = { $regex: name, $options: 'i' };
-    if (vendor_id) query.vendor_id = vendor_id;
-    if (category) query.category = category;
+    const { groupBy, metric, field } = req.query;
+
+    if (!groupBy || !metric || !field) {
+        return res.status(400).json({ error: 'Tous les paramètres sont requis.' });
+    }
+
+    const validMetrics = ['avg', 'sum', 'count'];
+    if (!validMetrics.includes(metric)) {
+        return res.status(400).json({ error: 'Métrique invalide. Utilisez avg, sum ou count.' });
+    }
 
     try {
-        const potions = await Potion.find(query);
-        res.json(potions);
+        const result = await Potion.aggregate([
+            { $group: { _id: `$${groupBy}`, [metric]: { [`$${metric}`]: `$${field}` } } }
+        ]);
+        res.json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

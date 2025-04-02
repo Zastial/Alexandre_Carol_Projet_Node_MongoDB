@@ -129,11 +129,11 @@ router.post('/login', async (req, res) => {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'strict',
-    secure: false, // à mettre sur true en prod (https)
+    secure: false,
     maxAge: 24 * 60 * 60 * 1000 // durée de vie 24h
   });
 
-  res.json({ message: 'Connecté avec succès', token: token });
+  res.json({ message: 'Connecté avec succès' });
 });
 
 // GET /auth/logout
